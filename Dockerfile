@@ -2,6 +2,7 @@ FROM php:8.1.0-apache
 
 #php setup, install extensions, setup configs
 RUN apt-get update && apt-get install --no-install-recommends -y \
+    libpq-dev \
     libzip-dev \
     libxml2-dev \
     mariadb-client \
@@ -11,6 +12,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 RUN pecl install zip pcov
 RUN docker-php-ext-enable zip \
+    && docker-php-ext-install pgsql \
+    && docker-php-ext-install mysqli \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install soap \
@@ -45,12 +48,12 @@ RUN chmod +x /usr/local/bin/enable-xdebug \
     && mkdir -p /usr/local/tasks/
 
 #adds common tasks used through Taskfiles
-COPY tasks/ /usr/local/tasks/
+#COPY tasks/ /usr/local/tasks/
 
 #setup task, for running Taskfiles
-RUN curl -o /tmp/taskfile.tar.gz 'https://oberd-static-media.s3.amazonaws.com/builddeps/task/3.34.1/task_linux_386.tar.gz' \
-    && tar -xzf /tmp/taskfile.tar.gz -C /tmp \
-    && mv /tmp/task /usr/local/bin/task \
-    && chmod +x /usr/local/bin/task
+#RUN curl -o /tmp/taskfile.tar.gz 'https://oberd-static-media.s3.amazonaws.com/builddeps/task/3.34.1/task_linux_386.tar.gz' \
+#    && tar -xzf /tmp/taskfile.tar.gz -C /tmp \
+#    && mv /tmp/task /usr/local/bin/task \
+#    && chmod +x /usr/local/bin/task
 
 CMD ["apache2-foreground"]
