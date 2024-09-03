@@ -8,7 +8,13 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     mariadb-client \
     zip \
     unzip \
+    #install deps for wkhtmltopdf
+    libxrender1 \
+    libfontconfig1 \
+    libxrender1 \ 
+    libxext6 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 RUN pecl install zip pcov
 RUN docker-php-ext-enable zip \
